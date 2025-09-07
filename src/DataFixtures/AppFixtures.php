@@ -164,6 +164,30 @@ class AppFixtures extends Fixture
             $users[] = $user;
         }
 
+        //Usertest
+        $user = new User();
+        $user->setEmail('test@test.com')
+            ->setPassword($this->hasher->hashPassword($user, 'password'))
+            ->setName('User Test')
+            ->setRoles(['ROLE_USER'])
+            ->setCreationDate(new DateTimeImmutable('2023-01-01'))
+            ->setCity($cities[array_rand($cities)])
+            ->setBio($faker->paragraph());
+
+        $manager->persist($user);
+
+        //User admin
+        $user = new User();
+        $user->setEmail('admin@test.com')
+            ->setPassword($this->hasher->hashPassword($user, 'admin'))
+            ->setName('User Admin')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setCreationDate(new DateTimeImmutable('2023-01-01'))
+            ->setCity($cities[array_rand($cities)])
+            ->setBio($faker->paragraph());
+
+        $manager->persist($user);
+
         //MESSAGES
         $messages = [];
         for ($i = 0; $i < 200; $i++) {
