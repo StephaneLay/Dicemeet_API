@@ -8,7 +8,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-#[ApiResource]
 class Message
 {
     #[ORM\Id]
@@ -16,12 +15,7 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    private ?User $user1 = null;
-
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    private ?User $user2 = null;
-
+    
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
@@ -34,34 +28,21 @@ class Message
     #[ORM\Column]
     private ?bool $isRead = null;
 
+    #[ORM\ManyToOne]
+    private ?User $receiver = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $sender = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUser1(): ?User
-    {
-        return $this->user1;
-    }
+    
 
-    public function setUser1(?User $user1): static
-    {
-        $this->user1 = $user1;
-
-        return $this;
-    }
-
-    public function getUser2(): ?User
-    {
-        return $this->user2;
-    }
-
-    public function setUser2(?User $user2): static
-    {
-        $this->user2 = $user2;
-
-        return $this;
-    }
+   
 
     public function getContent(): ?string
     {
@@ -107,6 +88,30 @@ class Message
     public function setIsRead(bool $isRead): static
     {
         $this->isRead = $isRead;
+
+        return $this;
+    }
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(?User $receiver): static
+    {
+        $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): static
+    {
+        $this->sender = $sender;
 
         return $this;
     }

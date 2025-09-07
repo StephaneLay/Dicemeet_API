@@ -88,7 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->favoriteGames = new ArrayCollection();
         $this->favoritePlaces = new ArrayCollection();
         $this->meetups = new ArrayCollection();
-        $this->messages = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -334,35 +334,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): static
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setUser1($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): static
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getUser1() === $this) {
-                $message->setUser1(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
     public function getName(): ?string
     {

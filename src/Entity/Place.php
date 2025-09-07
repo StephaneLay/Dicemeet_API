@@ -46,6 +46,9 @@ class Place
     #[ORM\OneToMany(targetEntity: Meetup::class, mappedBy: 'place')]
     private Collection $meetups;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->favoritePlaces = new ArrayCollection();
@@ -186,6 +189,18 @@ class Place
                 $meetup->setPlace(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
