@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class GameController extends AbstractController
 {
-    #[Route('/games', name: 'app_game', methods: ['GET'])]
+    #[Route('/api/games', name: 'app_game', methods: ['GET'])]
     public function getAll(GameRepository $gameRepository): Response
     {
         $games = $gameRepository->findAll();
