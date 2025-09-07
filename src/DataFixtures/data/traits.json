@@ -1,0 +1,12 @@
+[
+  { "id": 1, "trait": "Curieux" },
+  { "id": 2, "trait": "Empathique" },
+  { "id": 3, "trait": "Créatif" },
+  { "id": 4, "trait": "Rigoureux" },
+  { "id": 5, "trait": "Optimiste" },
+  { "id": 6, "trait": "Sociable" },
+  { "id": 7, "trait": "Ambitieux" },
+  { "id": 8, "trait": "Discret" },
+  { "id": 9, "trait": "Spontané" },
+  { "id": 10, "trait": "Patient" }
+]

@@ -1,0 +1,12 @@
+[
+  { "id": 1, "nom": "Stratégie" },
+  { "id": 2, "nom": "Coopératif" },
+  { "id": 3, "nom": "Famille" },
+  { "id": 4, "nom": "Ambiance" },
+  { "id": 5, "nom": "Cartes" },
+  { "id": 6, "nom": "Déduction" },
+  { "id": 7, "nom": "Gestion" },
+  { "id": 8, "nom": "Enquête" },
+  { "id": 9, "nom": "Party Game" },
+  { "id": 10, "nom": "Jeu de rôle" }
+]

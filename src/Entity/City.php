@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
-#[ApiResource]
+
 class City
 {
     #[ORM\Id]
@@ -31,6 +31,9 @@ class City
      */
     #[ORM\OneToMany(targetEntity: Place::class, mappedBy: 'city')]
     private Collection $places;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
     public function __construct()
     {
@@ -111,6 +114,18 @@ class City
                 $place->setCity(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

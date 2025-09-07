@@ -1,0 +1,302 @@
+[
+    {
+        "id": 1,
+        "nom": "Catan",
+        "min_players": 3,
+        "max_players": 4
+    },
+    {
+        "id": 2,
+        "nom": "Dixit",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 3,
+        "nom": "Pandemic",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 4,
+        "nom": "7 Wonders",
+        "min_players": 2,
+        "max_players": 7
+    },
+    {
+        "id": 5,
+        "nom": "Carcassonne",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 6,
+        "nom": "Code Names",
+        "min_players": 4,
+        "max_players": 8
+    },
+    {
+        "id": 7,
+        "nom": "Azul",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 8,
+        "nom": "Splendor",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 9,
+        "nom": "Ticket to Ride",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 10,
+        "nom": "The Mind",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 11,
+        "nom": "Ghost Hunters",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 12,
+        "nom": "Mystic Valley",
+        "min_players": 3,
+        "max_players": 5
+    },
+    {
+        "id": 13,
+        "nom": "Castle Siege",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 14,
+        "nom": "Jungle Quest",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 15,
+        "nom": "Potion Panic",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 16,
+        "nom": "Shadow Realms",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 17,
+        "nom": "Alien Bazaar",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 18,
+        "nom": "Chrono Clash",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 19,
+        "nom": "Dragon's Hoard",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 20,
+        "nom": "Treasure Island",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 21,
+        "nom": "Galaxy Traders",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 22,
+        "nom": "Witch Hunt",
+        "min_players": 4,
+        "max_players": 10
+    },
+    {
+        "id": 23,
+        "nom": "Time Travelers",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 24,
+        "nom": "Forest Spirits",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 25,
+        "nom": "Battle Forge",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 26,
+        "nom": "Crystal Empire",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 27,
+        "nom": "Zombie Town",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 28,
+        "nom": "Spy Network",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 29,
+        "nom": "Magic Market",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 30,
+        "nom": "Dungeon Escape",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 31,
+        "nom": "Pirate's Cove",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 32,
+        "nom": "Robot Uprising",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 33,
+        "nom": "Vampire Masquerade",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 34,
+        "nom": "Island Survival",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 35,
+        "nom": "Space Explorers",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 36,
+        "nom": "Cursed Treasure",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 37,
+        "nom": "Ninja Showdown",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 38,
+        "nom": "Haunted Mansion",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 39,
+        "nom": "Wild West Shootout",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 40,
+        "nom": "Underwater Quest",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 41,
+        "nom": "Medieval Siege",
+        "min_players": 2,
+        "max_players": 6
+    },
+    {
+        "id": 42,
+        "nom": "Alien Invasion",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 43,
+        "nom": "Treasure Hunters",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 44,
+        "nom": "Fantasy Realms",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 45,
+        "nom": "City Builders",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 46,
+        "nom": "Jungle Adventure",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 47,
+        "nom": "Space Pirates",
+        "min_players": 3,
+        "max_players": 6
+    },
+    {
+        "id": 48,
+        "nom": "Mystery Mansion",
+        "min_players": 2,
+        "max_players": 4
+    },
+    {
+        "id": 49,
+        "nom": "Dragon Riders",
+        "min_players": 2,
+        "max_players": 5
+    },
+    {
+        "id": 50,
+        "nom": "Zombie Apocalypse",
+        "min_players": 2,
+        "max_players": 6
+    }
+]

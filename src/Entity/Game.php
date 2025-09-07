@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
-#[ApiResource]
+
 class Game
 {
     #[ORM\Id]
@@ -33,8 +33,7 @@ class Game
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imgUrl = null;
 
-    #[ORM\Column(length: 2, nullable: true)]
-    private ?string $difficulty = null;
+    
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     private ?Category $category = null;
@@ -129,17 +128,6 @@ class Game
         return $this;
     }
 
-    public function getDifficulty(): ?string
-    {
-        return $this->difficulty;
-    }
-
-    public function setDifficulty(?string $difficulty): static
-    {
-        $this->difficulty = $difficulty;
-
-        return $this;
-    }
 
     public function getCategory(): ?Category
     {
