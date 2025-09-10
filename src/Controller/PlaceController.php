@@ -17,13 +17,5 @@ final class PlaceController extends AbstractController
         ]);
     }
 
-    #[Route('/api/public/places/search', name: 'app_place_search', methods: ['GET'])]
-    public function search(Request $request, PlaceRepository $placeRepository): Response
-    {
-        $query = $request->query->get('search');
-
-        $results = $placeRepository->searchByName($query);
-
-        return $this->json($results);
-    }
+   
 }

@@ -14,26 +14,31 @@ class MeetupRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Meetup::class);
+
     }
+    public function findByFilters(array $cityNames, array $gameNames, array $barNames)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.game', 'g')
+            ->leftJoin('m.place', 'p')
+            ->leftJoin('p.city', 'c')
+            ->addSelect('g', 'p', 'c');
 
-    public function findByFilters(array $cityIds, array $gameIds, array $barIds): array {
-    $qb = $this->createQueryBuilder('e');
+        if (!empty($cityNames)) {
+            $qb->andWhere('c.name IN (:cities)')
+                ->setParameter('cities', $cityNames);
+        }
 
-    if ($cityIds) {
-        $qb->andWhere('e.city IN (:cityIds)')
-           ->setParameter('cityIds', $cityIds);
+        if (!empty($gameNames)) {
+            $qb->andWhere('g.name IN (:games)')
+                ->setParameter('games', $gameNames);
+        }
+
+        if (!empty($barNames)) {
+            $qb->andWhere('p.name IN (:bars)')
+                ->setParameter('bars', $barNames);
+        }
+
+        return $qb->getQuery()->getResult();
     }
-
-    if ($gameIds) {
-        $qb->andWhere('e.game IN (:gameIds)')
-           ->setParameter('gameIds', $gameIds);
-    }
-
-    if ($barIds) {
-        $qb->andWhere('e.place IN (:barIds)')
-           ->setParameter('barIds', $barIds);
-    }
-
-    return $qb->getQuery()->getResult();
-}
 }

@@ -18,13 +18,5 @@ final class GameController extends AbstractController
         return $this->json($games, 200, [] ,['groups' => 'game:read']);
     }
 
-    #[Route('/api/public/games/search', name: 'app_game_search', methods: ['GET'])]
-    public function search(Request $request, GameRepository $gameRepository): Response
-    {
-        $query = $request->query->get('search');
-
-        $results = $gameRepository->searchByName($query);
-
-        return $this->json($results);
-    }
+   
 }

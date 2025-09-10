@@ -18,6 +18,7 @@ class MeetupNormalizer implements NormalizerInterface
     {
         $data = $this->normalizer->normalize($object, $format, $context);
 
+        $data["id"] = $object->getId();
         $data['game'] = $object->getGame()->getName();
         $data['place'] = $object->getPlace()->getName();
         $data['city'] = $object->getPlace()->getCity()->getName();

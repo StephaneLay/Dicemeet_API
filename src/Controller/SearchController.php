@@ -12,11 +12,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class SearchController extends AbstractController
 {
-    #[Route('/api/public/search', name: 'app_search')]
+    #[Route('/api/public/search', name: 'app_search', methods: ['GET','OPTIONS'])]
     public function search(Request $request, CityRepository $cityRepository, GameRepository $gameRepository, PlaceRepository $placeRepository): Response
     {
         $query = $request->query->get('search','');
-
+        $results = [];
+        
+        
         $cityResults = $cityRepository->searchByName($query);
         foreach ( $cityResults as $city) {
             $results[] = [
