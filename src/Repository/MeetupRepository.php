@@ -16,28 +16,24 @@ class MeetupRepository extends ServiceEntityRepository
         parent::__construct($registry, Meetup::class);
     }
 
-    //    /**
-    //     * @return Meetup[] Returns an array of Meetup objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByFilters(array $cityIds, array $gameIds, array $barIds): array {
+    $qb = $this->createQueryBuilder('e');
 
-    //    public function findOneBySomeField($value): ?Meetup
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    if ($cityIds) {
+        $qb->andWhere('e.city IN (:cityIds)')
+           ->setParameter('cityIds', $cityIds);
+    }
+
+    if ($gameIds) {
+        $qb->andWhere('e.game IN (:gameIds)')
+           ->setParameter('gameIds', $gameIds);
+    }
+
+    if ($barIds) {
+        $qb->andWhere('e.place IN (:barIds)')
+           ->setParameter('barIds', $barIds);
+    }
+
+    return $qb->getQuery()->getResult();
+}
 }

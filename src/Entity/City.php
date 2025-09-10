@@ -17,8 +17,7 @@ class City
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cities')]
-    private ?Country $country = null;
+   
 
     /**
      * @var Collection<int, User>
@@ -44,18 +43,6 @@ class City
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCountry(): ?Country
-    {
-        return $this->country;
-    }
-
-    public function setCountry(?Country $country): static
-    {
-        $this->country = $country;
-
-        return $this;
     }
 
     /**

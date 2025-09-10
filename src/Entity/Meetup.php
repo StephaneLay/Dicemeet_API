@@ -41,6 +41,10 @@ class Meetup
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'meetup')]
     private Collection $messages;
 
+    #[ORM\ManyToOne(inversedBy: 'owned_meetups')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -153,6 +157,18 @@ class Meetup
                 $message->setMeetup(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }

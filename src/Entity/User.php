@@ -81,6 +81,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Meetup>
+     */
+    #[ORM\OneToMany(targetEntity: Meetup::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $owned_meetups;
+
     public function __construct()
     {
         $this->availabilities = new ArrayCollection();
@@ -88,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->favoriteGames = new ArrayCollection();
         $this->favoritePlaces = new ArrayCollection();
         $this->meetups = new ArrayCollection();
+        $this->owned_meetups = new ArrayCollection();
         
     }
 
@@ -344,6 +351,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meetup>
+     */
+    public function getOwnedMeetups(): Collection
+    {
+        return $this->owned_meetups;
+    }
+
+    public function addOwnedMeetup(Meetup $ownedMeetup): static
+    {
+        if (!$this->owned_meetups->contains($ownedMeetup)) {
+            $this->owned_meetups->add($ownedMeetup);
+            $ownedMeetup->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOwnedMeetup(Meetup $ownedMeetup): static
+    {
+        if ($this->owned_meetups->removeElement($ownedMeetup)) {
+            // set the owning side to null (unless already changed)
+            if ($ownedMeetup->getOwner() === $this) {
+                $ownedMeetup->setOwner(null);
+            }
+        }
 
         return $this;
     }

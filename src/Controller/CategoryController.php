@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CategoryController extends AbstractController
 {
-    #[Route('api/categories', name: 'app_category', methods: ['GET'])]
+    #[Route('api/public/categories', name: 'app_category', methods: ['GET'])]
     public function getAll(CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findAll();

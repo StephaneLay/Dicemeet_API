@@ -24,9 +24,11 @@ class AppFixtures extends Fixture
     public function __construct(private UserPasswordHasherInterface $hasher)
     {
     }
+    const CUSTOM_CITIES = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Bordeaux', 'Lille', 'Rennes', 'Reims', 'Le Havre', 'Saint-Étienne', 'Toulon', 'Grenoble', 'Dijon', 'Angers', 'Nîmes', 'Villeurbanne'];
+
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
+        $faker = Factory::create('fr_FR');
 
         //TRAITS
         $traits = [];
@@ -38,22 +40,12 @@ class AppFixtures extends Fixture
             $traits[] = $trait;
         }
 
-        //COUNTRIES
-        $countries = [];
-        for ($i = 0; $i < 20; $i++) {
-            $country = new Country();
-            $country->setName($faker->country());
-            $manager->persist($country);
-
-            $countries[] = $country;
-        }
 
         //CITIES
         $cities = [];
-        for ($i = 0; $i < 100; $i++) {
+        foreach (self::CUSTOM_CITIES as $cityName) {
             $city = new City();
-            $city->setName($faker->city())
-                ->setCountry($countries[array_rand($countries)]);
+            $city->setName($cityName);
             $manager->persist($city);
             $cities[] = $city;
         }
@@ -105,17 +97,7 @@ class AppFixtures extends Fixture
                 }
             }
 
-        //MEETUPS
-        $meetups = [];
-        for ($i = 0; $i < 200; $i++) {
-            $meetup = new Meetup();
-            $meetup->setGame($games[array_rand($games)])
-                ->setPlace($places[array_rand($places)])
-                ->setTime(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('now', '+3 months')))
-                ->setCapacity($faker->numberBetween(2, 10));
-            $manager->persist($meetup);
-            $meetups[] = $meetup;
-        }
+        
 
         //USERS
         $users = [];
@@ -127,7 +109,8 @@ class AppFixtures extends Fixture
                 ->setCreationDate(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 years', 'now')))
                 ->setCity($cities[array_rand($cities)])
                 ->setBio($faker->paragraph())
-                ->setImgUrl($faker->imageUrl(400, 400, 'people', true, 'Faker'));
+                ->setImgUrl($faker->imageUrl(400, 400, 'people', true, 'Faker'))
+                ->setRoles(['ROLE_USER']);
 
             // Add traits
             $traitCount = rand(0, 4);
@@ -145,11 +128,6 @@ class AppFixtures extends Fixture
                 $manager->persist($favGame);
             }
 
-            // Add meetups
-            $meetupCount = rand(0, 4);
-            for ($j = 0; $j < $meetupCount; $j++) {
-                $user->addMeetup($meetups[array_rand($meetups)]);
-            }
 
             // Add favorite places
             $favoritePlaceCount = rand(0, 3);
@@ -162,6 +140,19 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
             $users[] = $user;
+        }
+
+        //MEETUPS
+        $meetups = [];
+        for ($i = 0; $i < 200; $i++) {
+            $meetup = new Meetup();
+            $meetup->setGame($games[array_rand($games)])
+                ->setPlace($places[array_rand($places)])
+                ->setTime(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('now', '+3 months')))
+                ->setCapacity($faker->numberBetween(2, 10))
+                ->setOwner($users[array_rand($users)]);
+            $manager->persist($meetup);
+            $meetups[] = $meetup;
         }
 
         //Usertest
