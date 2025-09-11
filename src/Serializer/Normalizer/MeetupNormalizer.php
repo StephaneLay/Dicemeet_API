@@ -16,7 +16,7 @@ class MeetupNormalizer implements NormalizerInterface
 
     public function normalize($object, ?string $format = null, array $context = []): array
     {
-        $data = $this->normalizer->normalize($object, $format, $context);
+        // $data = $this->normalizer->normalize($object, $format, $context);
 
         $data["id"] = $object->getId();
         $data['game'] = $object->getGame()->getName();

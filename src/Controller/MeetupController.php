@@ -16,7 +16,7 @@ final class MeetupController extends AbstractController
     {
         $events = $meetupRepository->findAll();
 
-       return $this->json($events, 200, [] ,context: ['groups' => 'category:read']);
+       return $this->json($events, 200 );
     }
 
 
@@ -48,7 +48,7 @@ public function search(Request $request, MeetupRepository $meetupRepository): Re
 
     $events = $meetupRepository->findByFilters($cityNames, $gameNames, $barNames);
 
-    return $this->json($events, 200, [], context: ['groups' => 'category:read']);
+    return $this->json($events, 200);
 }
 
 }
