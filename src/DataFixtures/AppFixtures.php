@@ -109,7 +109,7 @@ class AppFixtures extends Fixture
                 ->setCreationDate(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 years', 'now')))
                 ->setCity($cities[array_rand($cities)])
                 ->setBio($faker->paragraph())
-                ->setImgUrl($faker->imageUrl(400, 400, 'people', true, 'Faker'))
+                ->setImgUrl("https://i.pravatar.cc/150?u=" . $faker->unique()->numberBetween(1, 1000))
                 ->setRoles(['ROLE_USER']);
 
             // Add traits
