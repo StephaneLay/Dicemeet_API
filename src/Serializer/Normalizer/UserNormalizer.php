@@ -26,7 +26,7 @@ class UserNormalizer implements NormalizerInterface
         $data['imgUrl'] = $object->getImgUrl();
         $data['bio'] = $object->getBio();
         foreach ($object->getPersonalityTraits() as $trait) {
-            $data['traits'][] = $trait->getName();
+            $data['traits'][] = ['id' => $trait->getId(), 'name' => $trait->getName()];
         }
         
 
