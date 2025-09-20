@@ -16,14 +16,14 @@ class UserNormalizer implements NormalizerInterface
 
     public function normalize($object, ?string $format = null, array $context = []): array
     {
-        // $data = $this->normalizer->normalize($object, $format, $context);
+        $baseUrl = 'http://localhost:8000'; // A CHANGER SI DEPLOIEMENT SERVEUR
 
         $data["id"] = $object->getId();
         $data["name"] = $object->getName();
         $data["email"] = $object->getEmail();
         $data["createdAt"] = $object->getCreationDate()->format('Y-m-d ');
         $data['city'] = $object->getCity() ? $object->getCity()->getName() : '';
-        $data['imgUrl'] = $object->getImgUrl();
+        $data['imgUrl'] = $baseUrl . '/uploads/' . $object->getImgUrl();
         $data['bio'] = $object->getBio();
         foreach ($object->getPersonalityTraits() as $trait) {
             $data['traits'][] = ['id' => $trait->getId(), 'name' => $trait->getName()];

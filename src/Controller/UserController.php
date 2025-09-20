@@ -31,7 +31,7 @@ final class UserController extends AbstractController
         return $this->json($user, 200);
     }
 
-    #[Route('/api/private/users/me', name: 'user_update', methods: ['PATCH'])]
+    #[Route('/api/private/users/me', name: 'user_update', methods: ['PATCH', 'POST'])]
     public function updateUser(
         Request $request,
         CityRepository $cityRepository,
@@ -45,9 +45,25 @@ final class UserController extends AbstractController
             return $this->json(['error' => 'Utilisateur non connecté'], 401);
         }
 
-        // --- Récupérer les données ---
-        $data = $request->request->all(); // tous les champs sauf fichiers
-        $files = $request->files;
+        $contentType = $request->headers->get('Content-Type') ?? '';
+
+        if (strpos($contentType, 'multipart/form-data') !== false) {
+            // reçu via FormData (POST)
+            $data = $request->request->all();
+            $files = $request->files;
+        } else {
+            // JSON
+            $data = json_decode($request->getContent(), true) ?? [];
+            $files = $request->files;
+        }
+
+        // --- Debug temporaire (optionnel) ---
+        // $this->get('logger')->info('updateUser payload: ' . json_encode($data));
+
+        // --- Name ---
+        if (isset($data['name'])) {
+            $user->setName(trim($data['name']));
+        }
 
         // --- Bio ---
         if (isset($data['bio'])) {
@@ -59,7 +75,7 @@ final class UserController extends AbstractController
             $cityName = trim($data['city']);
             $city = $cityRepository->findOneBy(['name' => $cityName]);
             if (!$city) {
-                $city = new City();
+                $city = new \App\Entity\City();
                 $city->setName($cityName);
                 $em->persist($city);
             }
@@ -68,15 +84,16 @@ final class UserController extends AbstractController
 
         // --- Traits ---
         if (isset($data['traits'])) {
-            $traitsArray = json_decode($data['traits'], true);
+            $traitsArray = is_string($data['traits']) ? json_decode($data['traits'], true) : $data['traits'];
             if (is_array($traitsArray)) {
-                // Supprimer anciens traits
-                foreach ($user->getPersonalityTraits() as $trait) {
-                    $user->removePersonalityTrait($trait);
+                // clear old
+                foreach ($user->getPersonalityTraits() as $t) {
+                    $user->removePersonalityTrait($t);
                 }
-                // Ajouter les nouveaux
+                // add new
                 foreach ($traitsArray as $inputTrait) {
-                    $trait = $personalityTraitRepository->find($inputTrait['id']);
+                    $id = $inputTrait['id'] ?? $inputTrait;
+                    $trait = $personalityTraitRepository->find($id);
                     if ($trait) {
                         $user->addPersonalityTrait($trait);
                     }
@@ -86,19 +103,19 @@ final class UserController extends AbstractController
 
         // --- Image ---
         if ($files->has('img')) {
-            /** @var UploadedFile $file */
             $file = $files->get('img');
+            if ($file && $file->isValid()) {
+                $extension = $file->guessExtension() ?: $file->getClientOriginalExtension() ?: 'bin';
+                $fileName = uniqid() . '.' . $extension;
 
-            $fileName = uniqid() . '.' . $file->guessExtension();
-            $file->move(
-                $this->getParameter('uploads_directory'), 
-                $fileName
-            );
+                $file->move(
+                    $this->getParameter('uploads_directory'),
+                    $fileName
+                );
 
-            // Stocker le chemin relatif à public
-            $user->setImgUrl('/uploads/' . $fileName);
+                $user->setImgUrl($fileName);
+            }
         }
-
 
         $em->persist($user);
         $em->flush();
