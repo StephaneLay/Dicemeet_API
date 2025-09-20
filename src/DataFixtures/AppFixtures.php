@@ -69,7 +69,7 @@ class AppFixtures extends Fixture
                 ->setMinPlayers($gameData['min_players'])
                 ->setMaxPlayers($gameData['max_players'])
                 ->setCategory($categories[array_rand($categories)])
-                ->setImgUrl($faker->imageUrl(400, 400, 'games', true, 'Faker'))
+                ->setImgUrl("https://picsum.photos/320/240?random=" . $faker->unique()->numberBetween(1, 1000))
                 ->setDescription($faker->paragraph());
             $manager->persist($game);
             $games[] = $game;
@@ -83,21 +83,12 @@ class AppFixtures extends Fixture
                 ->setCity($cities[array_rand($cities)])
                 ->setAdressStreet($faker->streetName())
                 ->setAdressNumber($faker->numberBetween(1, 100))
-                ->setCapacity($faker->numberBetween(10, 100));
+                ->setCapacity($faker->numberBetween(10, 100))
+                ->setImgUrl("https://picsum.photos/320/240?random=" . $faker->unique()->numberBetween(1, 1000));
             $manager->persist($place);
             $places[] = $place;
         }
 
-        //GAMES / PLACES
-            foreach ($games as $game) {
-                $placeCount = rand(1, 5);
-                $selectedPlaces = (array)array_rand($places, $placeCount);
-                foreach ($selectedPlaces as $placeIndex) {
-                    $game->addPlace($places[$placeIndex]);
-                }
-            }
-
-        
 
         //USERS
         $users = [];

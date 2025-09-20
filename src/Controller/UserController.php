@@ -28,7 +28,7 @@ final class UserController extends AbstractController
             return $this->json(['error' => 'Utilisateur non authentifié'], 401);
         }
 
-        return $this->json($user, 200);
+        return $this->json($user, 200,[], ['add_favorites' => true]);
     }
 
     #[Route('/api/private/users/me', name: 'user_update', methods: ['PATCH', 'POST'])]
@@ -57,8 +57,6 @@ final class UserController extends AbstractController
             $files = $request->files;
         }
 
-        // --- Debug temporaire (optionnel) ---
-        // $this->get('logger')->info('updateUser payload: ' . json_encode($data));
 
         // --- Name ---
         if (isset($data['name'])) {
@@ -133,7 +131,7 @@ final class UserController extends AbstractController
             return $this->json(['error' => 'Utilisateur non trouvé'], 404);
         }
 
-        return $this->json($user);
+        return $this->json($user, 200, [], ['add_favorites' => true]);
     }
 
 

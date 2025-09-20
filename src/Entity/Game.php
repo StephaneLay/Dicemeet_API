@@ -44,12 +44,7 @@ class Game
     #[ORM\OneToMany(targetEntity: FavoriteGame::class, mappedBy: 'game')]
     private Collection $favoriteGames;
 
-    /**
-     * @var Collection<int, Place>
-     */
-    #[ORM\ManyToMany(targetEntity: Place::class, mappedBy: 'games')]
-    private Collection $places;
-
+    
     /**
      * @var Collection<int, Meetup>
      */
@@ -59,7 +54,6 @@ class Game
     public function __construct()
     {
         $this->favoriteGames = new ArrayCollection();
-        $this->places = new ArrayCollection();
         $this->meetups = new ArrayCollection();
     }
 
@@ -171,33 +165,7 @@ class Game
         return $this;
     }
 
-    /**
-     * @return Collection<int, Place>
-     */
-    public function getPlaces(): Collection
-    {
-        return $this->places;
-    }
-
-    public function addPlace(Place $place): static
-    {
-        if (!$this->places->contains($place)) {
-            $this->places->add($place);
-            $place->addGame($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlace(Place $place): static
-    {
-        if ($this->places->removeElement($place)) {
-            $place->removeGame($this);
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, Meetup>
      */

@@ -34,12 +34,7 @@ class Place
     #[ORM\OneToMany(targetEntity: FavoritePlace::class, mappedBy: 'place')]
     private Collection $favoritePlaces;
 
-    /**
-     * @var Collection<int, Game>
-     */
-    #[ORM\ManyToMany(targetEntity: Game::class, inversedBy: 'places')]
-    private Collection $games;
-
+    
     /**
      * @var Collection<int, Meetup>
      */
@@ -49,10 +44,12 @@ class Place
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $img_url = null;
+
     public function __construct()
     {
         $this->favoritePlaces = new ArrayCollection();
-        $this->games = new ArrayCollection();
         $this->meetups = new ArrayCollection();
     }
 
@@ -139,29 +136,7 @@ class Place
         return $this;
     }
 
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
-
-    public function addGame(Game $game): static
-    {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        $this->games->removeElement($game);
-
-        return $this;
-    }
+   
 
     /**
      * @return Collection<int, Meetup>
@@ -201,6 +176,18 @@ class Place
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getImgUrl(): ?string
+    {
+        return $this->img_url;
+    }
+
+    public function setImgUrl(string $img_url): static
+    {
+        $this->img_url = $img_url;
 
         return $this;
     }
