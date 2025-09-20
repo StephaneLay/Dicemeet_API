@@ -23,7 +23,14 @@ class UserNormalizer implements NormalizerInterface
         $data["email"] = $object->getEmail();
         $data["createdAt"] = $object->getCreationDate()->format('Y-m-d ');
         $data['city'] = $object->getCity() ? $object->getCity()->getName() : '';
-        $data['imgUrl'] = $baseUrl . '/uploads/' . $object->getImgUrl();
+
+        // On differencie les users fixtures avec les vrais users
+        if ($data['id'] > 100) {
+            $data['imgUrl'] = $baseUrl . '/uploads/' . $object->getImgUrl();
+        }else {
+            $data['imgUrl'] = $object->getImgUrl();
+        }
+        
         $data['bio'] = $object->getBio();
         foreach ($object->getPersonalityTraits() as $trait) {
             $data['traits'][] = ['id' => $trait->getId(), 'name' => $trait->getName()];

@@ -16,28 +16,34 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    //    /**
-    //     * @return Message[] Returns an array of Message objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findUserInterlocutorsByLastMessage(int $userId): array
+    {
+        $qb = $this->createQueryBuilder('m');
 
-    //    public function findOneBySomeField($value): ?Message
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $qb->select('
+        CASE 
+            WHEN m.sender = :userId THEN IDENTITY(m.receiver)
+            ELSE IDENTITY(m.sender)
+        END AS interlocutorId,
+        MAX(m.time) AS lastMessageTime
+    ')
+            ->where('m.meetup IS NULL')
+            ->andWhere('m.sender = :userId OR m.receiver = :userId')
+            ->setParameter('userId', $userId)
+            ->groupBy('interlocutorId')
+            ->orderBy('lastMessageTime', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findMessagesBetweenUsers(int $userId, int $interlocutorId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('(m.sender = :userId AND m.receiver = :interlocutorId) OR (m.sender = :interlocutorId AND m.receiver = :userId)')
+            ->setParameter('userId', $userId)
+            ->setParameter('interlocutorId', $interlocutorId)
+            ->orderBy('m.time', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

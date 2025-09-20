@@ -166,6 +166,7 @@ class AppFixtures extends Fixture
             ->setBio($faker->paragraph());
 
         $manager->persist($user);
+        $users[] = $user;
 
         //User admin
         $user = new User();
@@ -181,7 +182,7 @@ class AppFixtures extends Fixture
 
         //MESSAGES
         $messages = [];
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 3500; $i++) {
             $message = new Message();
             $message->setSender($users[array_rand($users)])
                 ->setContent($faker->sentence())
