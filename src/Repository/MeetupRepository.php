@@ -16,7 +16,7 @@ class MeetupRepository extends ServiceEntityRepository
         parent::__construct($registry, Meetup::class);
 
     }
-    public function findByFilters(array $cityNames, array $gameNames, array $barNames)
+    public function findByFilters(array $cityNames, array $gameNames, array $placeNames)
     {
         $qb = $this->createQueryBuilder('m')
             ->leftJoin('m.game', 'g')
@@ -34,9 +34,9 @@ class MeetupRepository extends ServiceEntityRepository
                 ->setParameter('games', $gameNames);
         }
 
-        if (!empty($barNames)) {
-            $qb->andWhere('p.name IN (:bars)')
-                ->setParameter('bars', $barNames);
+        if (!empty($placeNames)) {
+            $qb->andWhere('p.name IN (:places)')
+                ->setParameter('places', $placeNames);
         }
 
         return $qb->getQuery()->getResult();

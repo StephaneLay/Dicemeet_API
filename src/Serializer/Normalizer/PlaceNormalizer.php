@@ -22,6 +22,7 @@ class PlaceNormalizer implements NormalizerInterface
         $data['capacity'] = $object->getCapacity();
         $data['imgUrl'] = $object->getImgUrl();
         $data['location'] = $object->getAdressNumber() . ' ' .$object->getAdressStreet() ;
+        $data['cityName'] = $object->getCity()->getName() ;
  
         return $data;
     }

@@ -18,8 +18,8 @@ final class GameController extends AbstractController
         return $this->json($games, 200);
     }
 
-    #[Route('/api/private/games/{id}', name: 'app_game_details', methods: ['GET'])]
-    public function getDetails(GameRepository $gameRepository, int $id): Response
+    #[Route('/api/private/games/{id}', name: 'app_game_by_id', methods: ['GET'])]
+    public function getGameById(GameRepository $gameRepository, int $id): Response
     {
         $game = $gameRepository->find($id);
         if (!$game) {

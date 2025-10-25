@@ -134,7 +134,27 @@ final class UserController extends AbstractController
         return $this->json($user, 200, [], ['add_favorites' => true]);
     }
 
+    #[Route('/api/private/users/{userId}/events', name: 'app_user_events', methods: ['GET','OPTIONS'])]
+    public function getUserEvents(int $userId): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Utilisateur non authentifié'], 401);
+        }
+        $events = $user->getMeetups();
+        return $this->json($events, 200);
+    }
 
+    #[Route('/api/private/users/{userId}/owned', name: 'app_user_owned', methods: ['GET','OPTIONS'])]
+    public function getUserOwnedEvents(int $userId): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Utilisateur non authentifié'], 401);
+        }
+        $events = $user->getOwnedMeetups();
+        return $this->json($events, 200);
+    }
 }
 
 

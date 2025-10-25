@@ -35,7 +35,6 @@ class MessageNormalizer implements NormalizerInterface
          if ($object->getMeetup()) {
             $data["meetup"] = [
                 "id" => $object->getMeetup()->getId(),
-                "title" => $object->getMeetup()->getTitle()
             ];
          } else {
             $data["meetup"] = null;

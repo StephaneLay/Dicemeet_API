@@ -25,7 +25,7 @@ class MeetupNormalizer implements NormalizerInterface
         $data['date'] = $object->getTime()->format('Y-m-d H:i:s');
         $data['participants'] = count($object->getUsers());
         $data['maxParticipants'] = $object->getCapacity();
-        $data['owner'] = $object->getOwner()->getName();
+        $data['ownerId'] = $object->getOwner()->getId();
 
         
         return $data;

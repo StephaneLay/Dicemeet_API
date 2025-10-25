@@ -194,6 +194,19 @@ class AppFixtures extends Fixture
             $messages[] = $message;
         }
 
+
+        //Add users to meetups
+        foreach ($meetups as $meetup) {
+            $owner = $users[array_rand($users)];
+            $owner->addOwnedMeetup($meetup);
+            $meetup->addUser($owner);
+            $userCount = rand(1, $meetup->getCapacity() - 1);
+            for ($j = 0; $j < $userCount; $j++) {
+                $meetup->addUser($users[array_rand($users)]);
+            }
+            $manager->persist($meetup);
+            $manager->persist($owner);
+        }
         $manager->flush();
     }
 }

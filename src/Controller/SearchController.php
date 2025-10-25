@@ -16,31 +16,41 @@ final class SearchController extends AbstractController
     public function search(Request $request, CityRepository $cityRepository, GameRepository $gameRepository, PlaceRepository $placeRepository): Response
     {
         $query = $request->query->get('search','');
+        $type = $request->query->get('type','');
         $results = [];
         
         
         $cityResults = $cityRepository->searchByName($query);
         foreach ( $cityResults as $city) {
-            $results[] = [
+            if ($type == 'city' || $type == '') {
+                $results[] = [
+                'id' => $city->getId(),
                 'name' => $city->getName(),
                 'type' => 'ville'
             ];
+            }
         }
 
         $gameResults = $gameRepository->searchByName($query);
         foreach ( $gameResults as $game) {
-            $results[] = [
+            if ($type == 'games' || $type == '') {
+                $results[] = [
+                'id' => $game->getId(),
                 'name' => $game->getName(),
                 'type' => 'jeu'
             ];
+            }
         }
 
         $placeResults = $placeRepository->searchByName($query);
         foreach ( $placeResults as $place) {
-            $results[] = [
+            if ($type == 'places' || $type == '') {
+                $results[] = [
+                'id' => $place->getId(),
                 'name' => $place->getName(),
                 'type' => 'lieu'
             ];
+            }
         }
 
         return $this->json($results);
