@@ -87,6 +87,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Meetup::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $owned_meetups;
 
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->personalityTraits = new ArrayCollection();
@@ -94,6 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->favoritePlaces = new ArrayCollection();
         $this->meetups = new ArrayCollection();
         $this->owned_meetups = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
         
     }
 
@@ -378,6 +385,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($ownedMeetup->getOwner() === $this) {
                 $ownedMeetup->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
             }
         }
 

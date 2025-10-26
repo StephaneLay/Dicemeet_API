@@ -31,7 +31,7 @@ class MessageRepository extends ServiceEntityRepository
             ->andWhere('m.sender = :userId OR m.receiver = :userId')
             ->setParameter('userId', $userId)
             ->groupBy('interlocutorId')
-            ->orderBy('lastMessageTime', 'DESC');
+            ->orderBy('lastMessageTime', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -42,7 +42,7 @@ class MessageRepository extends ServiceEntityRepository
             ->andWhere('(m.sender = :userId AND m.receiver = :interlocutorId) OR (m.sender = :interlocutorId AND m.receiver = :userId)')
             ->setParameter('userId', $userId)
             ->setParameter('interlocutorId', $interlocutorId)
-            ->orderBy('m.time', 'DESC')
+            ->orderBy('m.time', 'ASC')
             ->getQuery()
             ->getResult();
     }

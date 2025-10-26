@@ -38,7 +38,7 @@ class Meetup
     /**
      * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'meetup')]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'meetup',cascade: ['remove'],orphanRemoval: true)]
     private Collection $messages;
 
     #[ORM\ManyToOne(inversedBy: 'owned_meetups')]

@@ -134,6 +134,17 @@ final class UserController extends AbstractController
         return $this->json($user, 200, [], ['add_favorites' => true]);
     }
 
+    #[Route('/api/private/users/{id}/notifications', methods: ['GET'])]
+    public function getUserNotifications(UserRepository $userRepository, int $id): Response
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            return $this->json(['error' => 'Utilisateur non trouvé'], 404);
+        }
+        $notifications = $user->getNotifications();
+        return $this->json($notifications, 200);
+    }
+
     #[Route('/api/private/users/{userId}/events', name: 'app_user_events', methods: ['GET','OPTIONS'])]
     public function getUserEvents(int $userId): Response
     {

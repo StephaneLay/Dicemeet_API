@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Event\PostedMessageMeetupEvent;
+use App\Repository\MeetupRepository;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,6 +66,28 @@ final class MessageController extends AbstractController
         $em->flush();
         return $this->json(['success' => true], 201);
     }
-
+    
+    #[Route('/api/private/events/{id}/messages', name: 'app_message_update', methods: ['POST'])]
+    public function updateMessage(Request $request, 
+    EntityManagerInterface $em, 
+    int $id, 
+    MeetupRepository $meetupRepository, 
+    EventDispatcherInterface $eventDispatcher): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $message = new Message();
+        $meetup = $meetupRepository->find($id);
+        $message->setContent($data['content']);
+        $message->setSender($this->getUser());
+        $message->setMeetup($meetup);
+        $message->setTime(new \DateTimeImmutable());
+        $message->setIsRead(false);
+        $eventDispatcher->dispatch(new PostedMessageMeetupEvent($message, $this->getUser(), $meetup),PostedMessageMeetupEvent::NAME);
+        $em->persist($message);
+        $em->flush();
+        return $this->json(['success' => true], 201);
+    }
+       
+    
     
 }

@@ -3,9 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Meetup;
+use App\Event\DateUpdateMeetupEvent;
+use App\Event\DeleteMeetupEvent;
+use App\Event\PlaceUpdateMeetupEvent;
+use App\Event\UserJoinMeetupEvent;
+use App\Event\UserKickMeetupEvent;
 use App\Repository\MeetupRepository;
+use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,15 +25,15 @@ use App\Repository\GameRepository;
 
 final class MeetupController extends AbstractController
 {
-    #[Route('/api/public/events', name: 'app_meetup' , methods: ['GET'])]
+    #[Route('/api/public/events', name: 'app_meetup', methods: ['GET'])]
     public function getAll(MeetupRepository $meetupRepository): Response
     {
         $events = $meetupRepository->findAll();
 
-       return $this->json($events, 200 );
+        return $this->json($events, 200);
     }
 
-    #[Route('/api/private/events/search', name: 'app_meetup_search', methods: ['GET','OPTIONS'])]
+    #[Route('/api/private/events/search', name: 'app_meetup_search', methods: ['GET', 'OPTIONS'])]
     public function search(Request $request, MeetupRepository $meetupRepository): Response
     {
         $filters = $request->query->get('filters', '');
@@ -33,12 +41,12 @@ final class MeetupController extends AbstractController
 
         $cityNames = [];
         $gameNames = [];
-        $placeNames  = [];
+        $placeNames = [];
 
         foreach ($filterArray as $filter) {
             [$type, $name] = explode(':', $filter);
 
-            switch($type) {
+            switch ($type) {
                 case 'ville':
                     $cityNames[] = $name;
                     break;
@@ -76,7 +84,7 @@ final class MeetupController extends AbstractController
         return $this->json(['success' => true], 201);
     }
 
-    #[Route('/api/private/events/{id}', name: 'app_meetup_detail' , methods: ['GET'])]
+    #[Route('/api/private/events/{id}', name: 'app_meetup_detail', methods: ['GET'])]
     public function getEventById(MeetupRepository $meetupRepository, int $id): Response
     {
         $event = $meetupRepository->find($id);
@@ -88,50 +96,70 @@ final class MeetupController extends AbstractController
         return $this->json($event, 200);
     }
 
-    #[Route('/api/private/events/{id}', name: 'app_meetup_update', methods: ['PATCH', 'POST'])]
-public function updateEvent(MeetupRepository $meetupRepository, int $id, Request $request, EntityManagerInterface $em, PlaceRepository $placeRepository, GameRepository $gameRepository): Response
-{
-    $event = $meetupRepository->find($id);
-    if (!$event) {
-        return $this->json(['error' => 'Event not found'], 404);
-    }
+    #[Route('/api/private/events/{id}', name: 'app_meetup_update', methods: ['PATCH'])]
+    public function updateEvent(MeetupRepository $meetupRepository, 
+    int $id, 
+    Request $request, 
+    EntityManagerInterface $em, 
+    PlaceRepository $placeRepository, 
+    GameRepository $gameRepository,
+    EventDispatcherInterface $eventDispatcher): Response
+    {
+        $event = $meetupRepository->find($id);
 
-    // On décode le JSON brut envoyé dans le corps de la requête
-    $data = json_decode($request->getContent(), true);
-
-    if (!$data) {
-        return $this->json(['error' => 'Invalid JSON'], 400);
-    }
-
-    // Validation basique (optionnelle)
-    if (isset($data['date'])) {
-        $date = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $data['date']);
-        if (!$date) {
-            return $this->json(['error' => 'Invalid date format. Expected Y-m-d H:i:s'], 400);
+        if (!$event) {
+            return $this->json(['error' => 'Event not found'], 404);
         }
-        $event->setTime($date);
-    }
 
-    if (isset($data['place'])) {
-        $place = $placeRepository->findOneBy(['name' => $data['place']]);
-        if (!$place) {
-            return $this->json(['error' => 'Place not found'], 404);
+        $this->denyAccessUnlessGranted('MEETUP_UPDATE', $event);
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data) {
+            return $this->json(['error' => 'Invalid JSON'], 400);
         }
-        $event->setPlace($place);
+
+        if (isset($data['date'])) {
+            $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $data['date']);
+            if (!$date) {
+                return $this->json(['error' => 'Invalid date format. Expected Y-m-d H:i:s'], 400);
+            }
+            $eventDispatcher->dispatch(new DateUpdateMeetupEvent($event),DateUpdateMeetupEvent::NAME);
+            $event->setTime($date);
+        }
+
+        if (isset($data['place'])) {
+            $place = $placeRepository->findOneBy(['name' => $data['place']]);
+            if (!$place) {
+                return $this->json(['error' => 'Place not found'], 404);
+            }
+            $eventDispatcher->dispatch(new PlaceUpdateMeetupEvent($event),PlaceUpdateMeetupEvent::NAME);
+            $event->setPlace($place);
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        return $this->json($event, 200);
     }
 
-    
+    #[Route('/api/private/events/{id}', name: 'app_meetup_delete', methods: ['DELETE'])]
+    public function deleteEvent(MeetupRepository $meetupRepository, int $id, EntityManagerInterface $em, EventDispatcherInterface $eventDispatcher): Response
+    {
+        $event = $meetupRepository->find($id);
+        if (!$event) {
+            return $this->json(['error' => 'Event not found'], 404);
+        }
+        $this->denyAccessUnlessGranted('MEETUP_DELETE', $event);
+        $eventDispatcher->dispatch(new DeleteMeetupEvent($event));
+        $em->remove($event);
+        $em->flush();
+        return $this->json(['success' => true], 200);
+    }
 
-    $em->persist($event);
-    $em->flush();
-
-    return $this->json($event, 200);
-}
 
 
-   
-
-    #[Route('/api/private/events/{id}/users', name: 'app_meetup_users', methods: ['GET','OPTIONS'])]
+    #[Route('/api/private/events/{id}/users', name: 'app_meetup_users', methods: ['GET', 'OPTIONS'])]
     public function getEventUsers(MeetupRepository $meetupRepository, int $id): Response
     {
         $event = $meetupRepository->find($id);
@@ -139,12 +167,61 @@ public function updateEvent(MeetupRepository $meetupRepository, int $id, Request
         return $this->json($users, 200);
     }
 
-    #[Route('/api/private/events/{id}/messages', name: 'app_meetup_messages', methods: ['GET','OPTIONS'])]
-    public function getEventMessages(MeetupRepository $meetupRepository, int $id): Response
+    #[Route('/api/private/events/{id}/messages', name: 'app_meetup_messages', methods: ['GET', 'OPTIONS'])]
+    public function getEventMessages(int $id, MessageRepository $messageRepository): Response
+    {
+        $messages = $messageRepository->findBy(['meetup' => $id], ['time' => 'ASC']);
+        return $this->json($messages, 200);
+    }
+
+    #[Route('/api/private/events/{id}/users/{userId}', name: 'app_meetup_add_user', methods: ['POST'])]
+    public function addUser(MeetupRepository $meetupRepository, int $id, 
+    int $userId, EntityManagerInterface $em, 
+    UserRepository $userRepository, 
+    EventDispatcherInterface $eventDispatcher): Response
     {
         $event = $meetupRepository->find($id);
-        $messages = $event->getMessages();
-        return $this->json($messages, 200);
+        $user = $userRepository->find($userId);
+        if (!$user) {
+            return $this->json(['error' => 'User not found'], 404);
+        }
+        if (!$event) {
+            return $this->json(['error' => 'Event not found'], 404);
+        }
+        $eventDispatcher->dispatch(new UserJoinMeetupEvent($event, $user),UserJoinMeetupEvent::NAME);
+        $event->addUser($user);
+        $user->addMeetup($event);
+        $em->persist($event);
+        $em->persist($user);
+        $em->flush();
+        return $this->json(['success' => true], 200);
+    }
+
+    #[Route('/api/private/events/{id}/users/{userId}', name: 'app_meetup_kick_user', methods: ['DELETE'])]
+    public function kickUser(MeetupRepository $meetupRepository
+    , int $id, 
+    int $userId, 
+    EntityManagerInterface $em, 
+    UserRepository $userRepository, 
+    EventDispatcherInterface $eventDispatcher,
+    ): Response
+    {
+        $event = $meetupRepository->find($id);
+        $user = $userRepository->find($userId);
+        if (!$user) {
+            return $this->json(['error' => 'User not found'], 404);
+        }
+        if (!$event) {
+            return $this->json(['error' => 'Event not found'], 404);
+        }
+
+        $eventDispatcher->dispatch(new UserKickMeetupEvent($event, $user),UserKickMeetupEvent::NAME);
+        $user->removeMeetup($event);
+        $event->removeUser($user);
+        $em->persist($event);
+        $em->persist($user);
+        $em->flush();
+        return $this->json(['success' => true], 200);
     }
 
 }
