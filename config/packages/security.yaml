@@ -34,6 +34,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/public,       roles: PUBLIC_ACCESS }
         - { path: ^/api/private,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin,       roles: ROLE_ADMIN }
 
 when@test:
     security:
