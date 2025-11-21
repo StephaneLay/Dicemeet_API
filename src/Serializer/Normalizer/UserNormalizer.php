@@ -16,7 +16,7 @@ class UserNormalizer implements NormalizerInterface
 
     public function normalize($object, ?string $format = null, array $context = []): array
     {
-        $baseUrl = 'http://localhost:8000'; // A CHANGER SI DEPLOIEMENT SERVEUR
+        $baseUrl = 'http://api.dicemeet.pro'; // A CHANGER SI DEPLOIEMENT SERVEUR
         $maxfavorites = 3; // Nombre maximum de jeux et bars favoris à afficher
 
         $data["id"] = $object->getId();
